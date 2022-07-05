@@ -16,7 +16,7 @@ class FractalStreaming {
     async fractalStreaming() {
         const x = parseInt(window.innerWidth / 2);
         const y = parseInt(window.innerHeight);
-        const response = await fetch(`http://localhost:8080/fractal?x=${x}&y=${y}`);
+        const response = await fetch(`http://13.124.75.42:8080//fractal?x=${x}&y=${y}`);
         const reader = response.body.getReader();
         const decoder = new TextDecoder("utf-8");
         while(true) {
