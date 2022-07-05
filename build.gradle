@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+}
+
+group 'org.fractal.ssr'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	implementation platform('com.linecorp.armeria:armeria-bom:1.16.0')
+	['armeria',
+	 'armeria-logback',
+	].each {
+		implementation("com.linecorp.armeria:${it}")
+	}
+	implementation 'com.google.code.gson:gson:2.9.0'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+configurations {
+	// A configuration meant for consumers that need the API of this component
+	implementation {
+		// This configuration is an "outgoing" configuration, it's not meant to be resolved
+		canBeResolved = true
+		// As an outgoing configuration, explain that consumers may want to consume it
+		canBeConsumed = true
+	}
+}
+
+jar {
+	manifest {
+		attributes 'Main-Class': 'org.fractal.ssr.server.FractalApplication'
+	}
+	from {
+		configurations.implementation.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+}
+
+tasks.withType(JavaCompile) {
+	options.compilerArgs += '-parameters'
+}
+
+test {
+    useJUnitPlatform()
+}
